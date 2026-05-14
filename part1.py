@@ -13,27 +13,25 @@ def clean_and_classify(messages):
     result = []
 
     for msg in messages:
+        user_id = msg["user_id"].strip()
         cleaned_message = msg["message"].strip()
-        if not cleaned_message:
+
+        if not user_id or not cleaned_message:
             continue
 
         text = cleaned_message.lower()
 
-        grant_keywords   = ["grant", "funding", "deadline", "scholarship"]
-        report_keywords  = ["report", "file", "send again", "document"]
-        general_keywords = ["how", "what", "can you", "where", "why"]
-
-        if any(kw in text for kw in grant_keywords):
+        if any(kw in text for kw in ["grant", "funding", "deadline", "scholarship"]):
             category = "grant_search"
-        elif any(kw in text for kw in report_keywords):
+        elif any(kw in text for kw in ["report", "file", "send again", "document"]):
             category = "report_request"
-        elif any(kw in text for kw in general_keywords):
+        elif any(kw in text for kw in ["how", "what", "can you", "where", "why"]):
             category = "general_question"
         else:
             category = "unknown"
 
         result.append({
-            "user_id": msg["user_id"],
+            "user_id": user_id,
             "channel": msg["channel"],
             "message": cleaned_message,
             "category": category,
@@ -44,6 +42,10 @@ def clean_and_classify(messages):
 output = clean_and_classify(messages)
 for item in output:
     print(item)
+
+# Conflict rule:
+# If a message matches multiple categories, I prioritize grant_search first
+# because grant-related intent is the most specific and important for this task.
     
     # Output:
 # {'user_id': 'u1', 'channel': 'email', 'message': 'Hello, I want info about grants for education.', 'category': 'grant_search'}
