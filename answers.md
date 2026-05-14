@@ -1,4 +1,4 @@
-# Internship Preliminary Test — Answers
+<img width="1204" height="101" alt="image" src="https://github.com/user-attachments/assets/80fbb999-bf03-4573-8cd2-975738638a67" /># Internship Preliminary Test — Answers
 
 ## Time Spent
 Approximately 1 hour.
@@ -9,11 +9,11 @@ Approximately 1 hour.
 
 **Problem 1: Hardcoded API Key**
 - What's wrong: `API_KEY = "sk-prod-abc123xyz"` is written directly in the code.
-- Why it matters: Anyone who sees the code (e.g. on GitHub) can steal the key and use it, causing unexpected costs or data leaks.
+- Why it matters: Anyone who sees the code publicly can easily steal the key and use it, causing unexpected costs or data leaks.
 - Fix: Use environment variables instead: `API_KEY = os.environ["LLM_API_KEY"]`
 
 **Problem 2: SQL Injection (two places)**
-- What's wrong: User input is directly concatenated into SQL strings in both `search_documents` and `save_answer` functions.
+- What's wrong: User input is directly merged into SQL strings in both `search_documents` and `save_answer` functions.
 - Why it matters: A user can type `'; DROP TABLE documents; --` and destroy the entire database.
 - Fix: Use parameterized queries:
 ```python
@@ -23,7 +23,7 @@ conn.execute("INSERT INTO answers VALUES (?, ?)", (question, answer))
 
 **Problem 3: LLM called twice**
 - What's wrong: `ask_llm(q, docs)` is called once for `print()` and again for `save_answer()`.
-- Why it matters: Doubles the API cost, and the two calls may return different answers — so what gets printed and what gets saved can be different.
+- Why it matters: Doubles the API cost, and the two calls may return different answers, so what gets printed and what gets saved can be different.
 - Fix: Call it once and store the result:
 ```python
 answer = ask_llm(q, docs)
@@ -42,32 +42,27 @@ save_answer(q, answer)
 
 **Q1: SQLite LIKE on 1M rows in Postgres**
 
-The problem is that `LIKE '%...%'` with a wildcard at the start cannot use a normal index — Postgres has to scan every single row one by one. On 1M rows this gets very slow.
+LIKE '%...%' becomes slow first because the % at the beginning prevents Postgres from using a normal index, so it may scan all 1,000,000 rows.
 
-Fix: Enable `pg_trgm` extension and create a GIN index on the content column. This makes `LIKE '%term%'` fast. Alternatively use Postgres full-text search (`tsvector`/`tsquery`).
+Fix: I would fix it by adding a pg_trgm GIN index for faster partial text search.
+For more advanced document searching, I would use Postgres full-text search with tsvector and tsquery.
 
 ---
 
 **Q2: Sending all documents into the prompt**
 
-If there are thousands of documents, concatenating all of them exceeds the LLM's context window limit, makes responses slower and more expensive, and confuses the model with irrelevant content.
+Sending all documents is not a good idea because the prompt can become too large, slow, expensive, and full of irrelevant information that confuses the LLM.
 
-Basic RAG fix:
-1. **Chunking:** split documents into small overlapping pieces (300-500 tokens each)
-2. **Embeddings:** convert each chunk into a vector and store in a vector database
-3. **Top-k retrieval:** embed the question, find the 3-5 most similar chunks
-4. **Send only those chunks to the LLM** — context stays small and relevant
+Fix: A basic RAG approach fixes this by splitting documents into smaller chunks, creating embeddings for each chunk, and retrieving only the top-k most relevant chunks for the user’s question.
+Then only those selected chunks are sent to the LLM, so the answer is faster, cheaper, and more focused.
 
 ---
 
 **Q3: LLM API error handling**
 
-| Failure | Why it happens | How to handle |
-|---|---|---|
-| Rate limit (429) | Too many requests | Retry with exponential backoff (wait 1s, 2s, 4s...) |
-| Timeout | API is slow or unreachable | Set a timeout on the request, catch the error, return a fallback message |
-| Unexpected response | API returned error without `"response"` key | Wrap in try/except KeyError, log raw response, return safe default |
-
+Three common failures are rate limits, timeouts, and unexpected API responses.  
+In production, I would handle rate limits with exponential backoff retries, handle timeouts with request limits and fallback messages, and validate the API response before reading fields from it.  
+I would also log these errors so they can be monitored and debugged later.
 ---
 
 **Q4 (Bonus): Postgres schema for chatbot with user history**
