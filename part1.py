@@ -44,3 +44,10 @@ def clean_and_classify(messages):
 output = clean_and_classify(messages)
 for item in output:
     print(item)
+    
+    # Output:
+# {'user_id': 'u1', 'channel': 'email', 'message': 'Hello, I want info about grants for education.', 'category': 'grant_search'}
+# {'user_id': 'u3', 'channel': 'email', 'message': 'Please send the report again.', 'category': 'report_request'}
+# {'user_id': 'u1', 'channel': 'whatsapp', 'message': 'Can you help me find funding?', 'category': 'grant_search'}
+# {'user_id': 'u4', 'channel': 'telegram', 'message': 'Good morning!', 'category': 'unknown'}
+# {'user_id': 'u5', 'channel': 'email', 'message': 'Can you send me the scholarship document?', 'category': 'grant_search'}
