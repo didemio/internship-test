@@ -1,4 +1,4 @@
-<img width="1204" height="101" alt="image" src="https://github.com/user-attachments/assets/80fbb999-bf03-4573-8cd2-975738638a67" /># Internship Preliminary Test — Answers
+# Internship Preliminary Test — Answers
 
 ## Time Spent
 Approximately 1 hour.
