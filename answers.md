@@ -60,9 +60,9 @@ Then only those selected chunks are sent to the LLM, so the answer is faster, ch
 
 **Q3: LLM API error handling**
 
-Three common failures are rate limits, timeouts, and unexpected API responses.  
-In production, I would handle rate limits with exponential backoff retries, handle timeouts with request limits and fallback messages, and validate the API response before reading fields from it.  
-I would also log these errors so they can be monitored and debugged later.
+Answer: Three common failures are rate limits, timeouts, and unexpected API responses.
+Fix: In production, I would handle rate limits with exponential backoff retries, handle timeouts with request limits and fallback messages, and validate the API response before reading fields from it. I would also log these errors so they can be monitored and debugged later.
+
 ---
 
 **Q4 (Bonus): Postgres schema for chatbot with user history**
