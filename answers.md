@@ -1,4 +1,4 @@
-# Internship Preliminary Test — Answers
+# Internship Preliminary Test Answers
 
 ## Time Spent
 Approximately 1 hour.
