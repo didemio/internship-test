@@ -5,7 +5,7 @@ Approximately 1 hour.
 
 ---
 
-## Part 2 — Code Review
+## Part 2 - Code Review
 
 **Problem 1: Hardcoded API Key**
 - What's wrong: `API_KEY = "sk-prod-abc123xyz"` is written directly in the code.
@@ -38,7 +38,7 @@ save_answer(q, answer)
 
 ---
 
-## Part 3 — Written Questions
+## Part 3 - Written Questions
 
 **Q1: SQLite LIKE on 1M rows in Postgres**
 
