@@ -135,4 +135,5 @@ CREATE TABLE messages (
 At query time: fetch the last N messages for the conversation and include them in the prompt as history.
 
 
-
+## Time Spent
+Approximately 1 hour.
